@@ -34,6 +34,8 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->group('api', ['namespace' => 'App\API'], function ($routes) {
     $routes->get('/user', 'User::index');
+    $routes->post('/user/login', 'User::login');
+    $routes->get('/user/logout', 'User::logout');
 });
 
 /*

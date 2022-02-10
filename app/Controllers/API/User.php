@@ -78,4 +78,44 @@ class User extends ResourceController
     {
         //
     }
+
+    /**
+     * Login user open session, json with nick and pass
+     *
+     * @return user 
+     */
+    public function login()
+    {
+        $data = $this->request->getJSON();
+        if(isset($data->nick) && isset($data->pass)){
+            $user = $this->model->check($data);
+            if($user != null){
+                $session = session();
+                $session->set('user_id', $user['id']);
+                $session->set('user_role', $user['role']);
+                $session->set('user_name', $user['name']);
+                $this->respond($user);
+            } else {
+                return $this->failValidationErrors('No existe el usuario');
+            }         
+        } else {
+            return $this->failValidationErrors('No se ha pasado un nick o pass en formato json');
+        }
+    }
+
+    /**
+     * Logout user close session
+     *
+     * @return mixed
+     */
+    public function logout()
+    {
+        $session = session();
+        $session->remove('user_id');
+        $session->remove('user_role');
+        $session->remove('user_name');
+        $session->destroy();
+        return $this->respond('exit');
+    }
+
 }
