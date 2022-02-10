@@ -50,8 +50,8 @@ class User extends Model
         $builder = $this->builder();
         $builder->getTable('users');
         $builder->select('id, role, name');
-        $builder->where(" nick = '$data->nick' AND pass = '$data->pass'");
+        $builder->where("nick = '$data->nick' AND pass = '$data->pass'");
         $users = $builder->get()->getResult('array');
-        return (count($users) > 0)? $users[0] : NULL ;
+        return (count($users) > 0)? $users[0] : NULL;
     }
 }
