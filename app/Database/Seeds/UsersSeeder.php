@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class User extends Seeder
+class UsersSeeder extends Seeder
 {
     public function run()
     {
@@ -38,5 +38,6 @@ class User extends Seeder
         ];
 
         $this->db->table('users')->insertBatch($users);
+        
     }
 }

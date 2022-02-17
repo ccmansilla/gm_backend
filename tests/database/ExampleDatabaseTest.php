@@ -1,18 +1,18 @@
 <?php
 
-use CodeIgniter\Test\CIUnitTestCase;
-use CodeIgniter\Test\DatabaseTestTrait;
-use Tests\Support\Database\Seeds\ExampleSeeder;
 use Tests\Support\Models\ExampleModel;
 
 /**
  * @internal
  */
-final class ExampleDatabaseTest extends CIUnitTestCase
+final class ExampleDatabaseTest extends \Tests\Support\DatabaseTestCase
 {
-    use DatabaseTestTrait;
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    protected $seed = ExampleSeeder::class;
+        // Extra code to run before each test
+    }
 
     public function testModelFindAll()
     {

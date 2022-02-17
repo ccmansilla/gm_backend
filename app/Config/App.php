@@ -296,7 +296,7 @@ class App extends BaseConfig
      *
      * @deprecated use Config\Cookie::$httponly property instead.
      */
-    public $cookieHTTPOnly = true;
+    public $cookieHTTPOnly = false;
 
     /**
      * --------------------------------------------------------------------------
@@ -322,7 +322,7 @@ class App extends BaseConfig
      *
      * @deprecated use Config\Cookie::$samesite property instead.
      */
-    public $cookieSameSite = 'Lax';
+    public $cookieSameSite = 'None';
 
     /**
      * --------------------------------------------------------------------------

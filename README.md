@@ -41,7 +41,7 @@ framework are exposed.
 
 ## Repository Management
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
+We use Github issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
 We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
 FEATURE REQUESTS.
 
@@ -61,3 +61,34 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 - [mbstring](http://php.net/manual/en/mbstring.installation.php)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
 - xml (enabled by default - don't turn it off)
+
+## CORS Filter for CodeIgniter 4
+
+### Installation
+Require the [agungsugiarto/codeigniter4-cors](https://github.com/agungsugiarto/codeigniter4-cors) package in your composer.json and update your dependencies:
+```
+composer require agungsugiarto/codeigniter4-cors
+```
+### Global usage
+To allow CORS for all your routes, first register CorsFilter.php filter at the top of the $aliases property of App/Config/Filter.php class:
+```php
+public $aliases = [
+    'cors' => \Fluent\Cors\Filters\CorsFilter::class,
+    // ...
+];
+```
+
+### Global restrictions
+Restrict routes based on their URI pattern by editing app/Config/Filters.php and adding them to the $filters array, e.g.:
+```php
+public filters = [
+    // ...
+    'cors' => ['after' => ['api/*']],
+];
+```
+### Configuration
+
+The defaults are set in config/cors.php. Publish the config to copy the file to your own config:
+```
+php spark cors:publish
+```

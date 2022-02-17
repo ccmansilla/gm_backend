@@ -8,32 +8,10 @@ class Security extends BaseConfig
 {
     /**
      * --------------------------------------------------------------------------
-     * CSRF Protection Method
-     * --------------------------------------------------------------------------
-     *
-     * Protection Method for Cross Site Request Forgery protection.
-     *
-     * @var string 'cookie' or 'session'
-     */
-    public $csrfProtection = 'cookie';
-
-    /**
-     * --------------------------------------------------------------------------
-     * CSRF Token Randomization
-     * --------------------------------------------------------------------------
-     *
-     * Randomize the CSRF Token for added security.
-     *
-     * @var bool
-     */
-    public $tokenRandomize = false;
-
-    /**
-     * --------------------------------------------------------------------------
      * CSRF Token Name
      * --------------------------------------------------------------------------
      *
-     * Token name for Cross Site Request Forgery protection.
+     * Token name for Cross Site Request Forgery protection cookie.
      *
      * @var string
      */
@@ -44,7 +22,7 @@ class Security extends BaseConfig
      * CSRF Header Name
      * --------------------------------------------------------------------------
      *
-     * Header name for Cross Site Request Forgery protection.
+     * Token name for Cross Site Request Forgery protection cookie.
      *
      * @var string
      */
@@ -55,7 +33,7 @@ class Security extends BaseConfig
      * CSRF Cookie Name
      * --------------------------------------------------------------------------
      *
-     * Cookie name for Cross Site Request Forgery protection.
+     * Cookie name for Cross Site Request Forgery protection cookie.
      *
      * @var string
      */
@@ -79,7 +57,7 @@ class Security extends BaseConfig
      * CSRF Regenerate
      * --------------------------------------------------------------------------
      *
-     * Regenerate CSRF Token on every submission.
+     * Regenerate CSRF Token on every request.
      *
      * @var bool
      */

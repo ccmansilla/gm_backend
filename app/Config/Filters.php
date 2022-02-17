@@ -6,8 +6,6 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
-use CodeIgniter\Filters\InvalidChars;
-use CodeIgniter\Filters\SecureHeaders;
 
 class Filters extends BaseConfig
 {
@@ -18,11 +16,10 @@ class Filters extends BaseConfig
      * @var array
      */
     public $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
-        'secureheaders' => SecureHeaders::class,
+        'csrf'     => CSRF::class,
+        'toolbar'  => DebugToolbar::class,
+        'honeypot' => Honeypot::class,
+        'cors' => \Fluent\Cors\Filters\CorsFilter::class
     ];
 
     /**
@@ -35,12 +32,10 @@ class Filters extends BaseConfig
         'before' => [
             // 'honeypot',
             // 'csrf',
-            // 'invalidchars',
         ],
         'after' => [
             'toolbar',
             // 'honeypot',
-            // 'secureheaders',
         ],
     ];
 
@@ -64,5 +59,7 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $filters = [];
+    public $filters = [
+        'cors' => ['after' => ['api/*']],
+    ];
 }
