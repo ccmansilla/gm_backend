@@ -7,9 +7,9 @@ use CodeIgniter\RESTful\ResourceController;
 class Volantes extends ResourceController
 {
 
-    protected $modelName = 'App\Models\OrderModel';
+    protected $modelName = 'App\Models\VolanteModel';
     protected $format    = 'json';
-    private $upload_path = 'public/uploads/orders/'; //path for upload
+    private $upload_path = 'public/uploads/volantes/'; //path for upload
     private $allowed_types = 'pdf'; //restrict extension
     private $max_size = 2048;
 
