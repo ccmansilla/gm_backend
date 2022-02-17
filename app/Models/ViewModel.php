@@ -8,7 +8,7 @@ class ViewModel extends Model
 {
     protected $DBGroup              = 'default';
     protected $table                = 'views';
-    protected $primaryKey           = 'id';
+    protected $primaryKey           = 'view_id';
     protected $useAutoIncrement     = true;
     protected $insertID             = 0;
     protected $returnType           = 'array';

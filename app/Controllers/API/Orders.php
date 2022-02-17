@@ -21,11 +21,13 @@ class Orders extends ResourceController
             $start = $page * $limit;
         }
         try{  
-			if($this->jefaturaSession()){
+			if($this->jefaturaSession() || $this->dependenciaSession()){
 				if($type == NULL || ($type != 'od' && $type != 'og' && $type != 'or')){
 					return $this->failValidationErrors('No se ha pasado un tipo de orden valido');
 				}
-				return $this->respond($this->model->obtener($type, $start, $limit, $about));
+                $session = session();
+                $user = $session->get('user_id');
+				return $this->respond($this->model->obtener($type, $start, $limit, $about, $user));
 			} else {
 				return $this->failUnauthorized('Acceso no autorizado');
 			}
@@ -200,6 +202,10 @@ class Orders extends ResourceController
     private function jefaturaSession(){
         $session = session();
         return ($session->get('user_role')) == 'jefatura';
-        //return true;
+    }
+
+    private function dependenciaSession(){
+        $session = session();
+        return ($session->get('user_role')) == 'dependencia';
     }
 }
