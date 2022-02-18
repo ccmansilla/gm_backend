@@ -11,7 +11,6 @@ class OrderViews extends ResourceController
     
     /**
      * Return an array of resource objects, themselves in array format
-     *
      * @return mixed
      */
     public function index($order_id = NULL)
@@ -29,7 +28,6 @@ class OrderViews extends ResourceController
 
     /**
      * Return the properties of a resource object
-     *
      * @return mixed
      */
     public function show($order_id = NULL, $user_id = NULL)
@@ -50,7 +48,6 @@ class OrderViews extends ResourceController
     
     /**
      * Return the properties of a resource object
-     *
      * @return mixed
      */
     public function users($order_id = NULL)
@@ -67,8 +64,7 @@ class OrderViews extends ResourceController
     }
 
     /**
-     * Create a new resource object, from "posted" parameters
-     *
+     * Crea un visto de una orden
      * @return mixed
      */
     public function create()

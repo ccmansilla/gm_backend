@@ -10,19 +10,28 @@ class Users extends ResourceController
     protected $modelName = 'App\Models\UserModel';
     protected $format    = 'json';
 
+    /**
+    * Devuelve el Listado de usuarios
+    * @return json con el listado de usuarios
+    */
     public function index()
     {
-        //try{  
+        try{  
             if($this->adminSession()){
                 return $this->respond($this->model->findAll());
             } else {
                 return $this->failUnauthorized('Acceso no autorizado');
             }
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
+    /**
+    * Para crear un usuario
+    * @return json con el usuario creado
+    * @var request json = {name, role, nick, pass}
+    */
     public function create()
     {
         try {
@@ -42,6 +51,12 @@ class Users extends ResourceController
         }
     }
 
+    
+    /**
+    * Devuelve el usuario a editar
+    * @return json con el usuario
+    * @param int $id
+    */
     public function edit($id = NULL)
     {
         try {
@@ -62,6 +77,13 @@ class Users extends ResourceController
         }
     }
 
+    
+    /**
+    * Actualiza cambios del usuario editado
+    * @return json con el usuario creado
+    * @param int $id 
+    * @var json = {name, role, nick, pass}
+    */
     public function update($id = NULL)
     {
         try {
@@ -88,6 +110,11 @@ class Users extends ResourceController
         }
     }
 
+    /**
+    * Elimina un usuario
+    * @return json con el usuario eliminado
+    * @param int $id del usuario
+    */
     public function delete($id = NULL)
     {
         try {
@@ -112,6 +139,11 @@ class Users extends ResourceController
         }
     }
 
+    /**
+    * Abre una session del usuario logeado
+    * @return json con el usuario
+    * @var json = {nick, pass}
+    */
     public function login(){;
         $data = $this->request->getJSON();
         $nick = (isset($data->nick))? $data->nick : NULL;
@@ -120,7 +152,7 @@ class Users extends ResourceController
             return $this->failValidationErrors('No se ha pasado un nick o pass en formato json');
         }
 
-        //try{
+        try{
             $user = $this->model->check($nick, $pass);
             if($user){
                 $session = session();
@@ -132,11 +164,14 @@ class Users extends ResourceController
             } else {
                 return $this->failNotFound('No se ha encontrado el usuario');
             }
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
+    /**
+    * Cierra la session del usuario
+    */
     public function logout(){
         try{
 
@@ -153,9 +188,12 @@ class Users extends ResourceController
 
     }
 
+    /**
+    * Verifica que el usuario con session abierta tiene rol administrador
+    * @return boolean true si es un usuario con rol jefatura
+    */
     private function adminSession(){
         $session = session();
-        return ($session->get('user_id')) != null;
-        //return true;
+        return ($session->get('user_role')) == 'admin';
     }
 }

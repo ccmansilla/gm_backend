@@ -45,7 +45,7 @@ class Orders extends ResourceController
     /**
     * Para crear una orden
     * @return json con la orden creada
-    * @var request type number year date about file
+    * @var post type, number, year, date, about, file
     */
     public function create()
     {
@@ -129,6 +129,7 @@ class Orders extends ResourceController
     /**
     * Actualiza los cambios de una orden editada
     * @param int $id  de la orden
+    * @var post type, number, year, date, about, file
     */
     public function update($id = NULL)
     {
