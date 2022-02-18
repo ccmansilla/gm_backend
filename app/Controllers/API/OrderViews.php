@@ -10,8 +10,9 @@ class OrderViews extends ResourceController
     protected $format    = 'json';
     
     /**
-     * Return an array of resource objects, themselves in array format
-     * @return mixed
+     * Devuelve la lista de usuarios que tienen visto de la orden
+     * @return json con la lista de usuarios
+     * @param $order_id de la orden  
      */
     public function index($order_id = NULL)
     {
@@ -19,53 +20,16 @@ class OrderViews extends ResourceController
             if($order_id == NULL){
                 return $this->failValidationErrors('No se ha pasado un ID valido');
             }
-            $views = $this->model->where('order_id',$order_id)->get()->getResult('array');
-            return $this->respond($views);
-        } catch (\Exception $e) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
-        }
-    }
-
-    /**
-     * Return the properties of a resource object
-     * @return mixed
-     */
-    public function show($order_id = NULL, $user_id = NULL)
-    {
-        try {
-            if($order_id == NULL || $user_id == NULL){
-                return $this->failValidationErrors('No se ha pasado un ID valido');
-            }
-            $view = $this->model->where(['order_id' => $order_id, 'user_id' => $user_id])->first();
-            if($view == NULL){
-                return $this->failNotFound('No se ha encontrado');
-            }
-            return $this->respond($view);
-        } catch (\Exception $e) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
-        }
-    }
-    
-    /**
-     * Return the properties of a resource object
-     * @return mixed
-     */
-    public function users($order_id = NULL)
-    {
-        //try {
-            if($order_id == NULL){
-                return $this->failValidationErrors('No se ha pasado un ID valido');
-            }
             $users = $this->model->users($order_id);
             return $this->respond($users);
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
     /**
      * Crea un visto de una orden
-     * @return mixed
+     * @var json {'order_id', 'user_id'}
      */
     public function create()
     {
