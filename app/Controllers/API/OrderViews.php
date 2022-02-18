@@ -49,14 +49,20 @@ class OrderViews extends ResourceController
      * Elimina un visto de una orden
      * @param $id del visto
      */
-    public function delete()
+    public function delete($id = NULL)
     {
         try {
-            $view = $this->request->getJSON();
-            if($this->model->insert($view)){
-                return $this->respondCreated($view);
+            if($id == NULL){
+                return $this->failValidationErrors('No se ha pasado un ID valido');
+            }
+            $view = $this->model->find($id);
+            if($view == NULL){
+                return $this->failNotFound('No se ha encontrado el usuario con el ID: '.$id);
+            }
+            if($this->model->delete($id)){
+                return $this->respondDeleted($user);
             } else {
-                return $this->failValidationErrors($this->model->validation->listErrors());
+                return $this->failServerError('No se ha podido eliminar el registro');
             }
         } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
