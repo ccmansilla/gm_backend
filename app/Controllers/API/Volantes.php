@@ -14,32 +14,30 @@ class Volantes extends ResourceController
     private $max_size = 2048;
 
     /**
-     * Return an array of resource objects, themselves in array format
-     *
-     * @return mixed
+     * Retorna la lista de los volantes enviados por el usuario
+     * @return json con la lista de volantes
      */
-    public function enviados($user = null)
+    public function enviados()
     {
         //
     }
 
     /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
+     * Retorna la lista de los volantes destinados al usuario 
+     * @return json con la lista de volantes
      */
-    public function recibidos($user = null)
+    public function recibidos()
     {
         //
     }
 
     
     /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
+     * Crea un volante     
+     * @var post estado, year, number, file adjunto  
+     * falta revisar
      */
-    public function enviar()
+    public function create()
     {
                 
         $estado = $this->request->getPost('estado');
@@ -108,9 +106,9 @@ class Volantes extends ResourceController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
+     * Devuelve el volante a editar
+     * @return json volante
+     * @param $id del volante  
      */
     public function edit($id = null)
     {
@@ -118,9 +116,9 @@ class Volantes extends ResourceController
     }
 
     /**
-     * Add or update a model resource, from "posted" properties
-     *
-     * @return mixed
+     * Actualiza los cambios de un volante editado
+     * @param int $id del volante
+     * @var post estado, year, number, file adjunto  
      */
     public function update($id = null)
     {
@@ -128,9 +126,10 @@ class Volantes extends ResourceController
     }
 
     /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
+     * Elimina un volante
+     * @param int $id del volante
+     * 
+     * falta revisar
      */
     public function delete($id = null)
     {
