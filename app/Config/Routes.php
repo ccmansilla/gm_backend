@@ -109,15 +109,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes) 
     //ruta : http://localhost:8080/api/orderviews/index/[order_id]
     $routes->get('orderviews/index/(:num)', 'OrderViews::index/$1');
 
-    //ruta : http://localhost:8080/api/orderviews/show/[order_id]/[user_id]
-    $routes->get('ordrviews/show/(:num)/(:num)','OrderViews::show/$1/$2');
-
-     //ruta : http://localhost:8080/api/orderviews/users/[order_id]
-     $routes->get('orderviews/users/(:num)','OrderViews::users/$1');
-
     //ruta : http://localhost:8080/api/orderviews/create
     //datos body json { order_id , user_id }
     $routes->post('orderviews/create', 'OrderViews::create');
+
+    //ruta : http://localhost:8080/api/orderviews/delete/[id]
+    $routes->delete('orderviews/delete/(:num)', 'OrderViews::delete/$1');
 });
 
 /*
