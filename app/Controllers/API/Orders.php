@@ -13,6 +13,11 @@ class Orders extends ResourceController
     private $allowed_types = 'pdf'; //restrict extension
     private $max_size = 2048;
 
+    /**
+    * Devuelve el Listado de ordenes de acuerdo al tipo
+    * @return json con el listado de ordenes
+    * @param string $type $page $about
+    */
     public function index($type = NULL, $page = 0, $about = '')
     {
         $limit = 10;
@@ -36,6 +41,12 @@ class Orders extends ResourceController
         }
     }
 
+
+    /**
+    * Para crear una orden
+    * @return json con la orden creada
+    * @var request type number year date about file
+    */
     public function create()
     {
         try {
@@ -89,7 +100,11 @@ class Orders extends ResourceController
         }
     }
 
-
+    /**
+    * Devuelve la orden para editar
+    * @return json con la orden
+    * @param int $id  de la orden
+    */
     public function edit($id = NULL)
     {
         try {
@@ -111,6 +126,10 @@ class Orders extends ResourceController
         }
     }
 
+    /**
+    * Actualiza los cambios de una orden editada
+    * @param int $id  de la orden
+    */
     public function update($id = NULL)
     {
         try {
@@ -172,7 +191,10 @@ class Orders extends ResourceController
         }
     }
 
-
+    /**
+    * Elimina una orden
+    * @param int $id  de la orden
+    */
     public function delete($id = NULL)
     {
         try{
@@ -199,11 +221,19 @@ class Orders extends ResourceController
         }
     }
 
+    /**
+    * Verifica que el usuario con session abierta tiene rol jefatura
+    * @return boolean true si es un usuario con rol jefatura
+    */
     private function jefaturaSession(){
         $session = session();
         return ($session->get('user_role')) == 'jefatura';
     }
 
+    /**
+    * Verifica que el usuario con session abierta tiene rol jefatura
+    * @return boolean true si es un usuario con rol jefatura
+    */
     private function dependenciaSession(){
         $session = session();
         return ($session->get('user_role')) == 'dependencia';
