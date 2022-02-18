@@ -45,5 +45,22 @@ class OrderViews extends ResourceController
         }
     }
 
-    
+    /**
+     * Elimina un visto de una orden
+     * @param $id del visto
+     */
+    public function delete()
+    {
+        try {
+            $view = $this->request->getJSON();
+            if($this->model->insert($view)){
+                return $this->respondCreated($view);
+            } else {
+                return $this->failValidationErrors($this->model->validation->listErrors());
+            }
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+        }
+    }
+
 }
