@@ -31,8 +31,7 @@ class VolanteModel extends Model
         'origen' => 'required|numeric|min_length[1]|max_length[11]',
         'destino' => 'required|numeric|min_length[1]|max_length[11]',
         'asunto' => 'required|min_length[2]',
-        'enlace_archivo' => 'required',
-        'enlace_adjunto' => 'required'
+        'enlace_archivo' => 'required'
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

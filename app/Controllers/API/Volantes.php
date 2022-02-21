@@ -19,7 +19,7 @@ class Volantes extends ResourceController
      */
     public function enviados()
     {
-        //
+        return $this->respond($this->model->findAll());
     }
 
     /**
@@ -28,32 +28,32 @@ class Volantes extends ResourceController
      */
     public function recibidos()
     {
-        //
+        return $this->respond($this->model->findAll());
     }
 
     
     /**
      * Crea un volante     
-     * @var post estado, year, number, file adjunto  
+     * @var post year, number, file adjunto  
      * falta revisar
      */
     public function create()
-    {
-                
-        $estado = $this->request->getPost('estado');
+    {   
+        $archivo = $this->request->getFile('archivo');
+        if ($archivo == NULL) {
+            return $this->failServerError('No cargo un archivo');
+        }
+
         $year = $this->request->getPost('year'); 
+
+        // Hay que cambiar esto deben ser numero correlativos
         $number = $this->request->getPost('number');
 
         $session = session();
         $user = $session->get('user_id');
 
+        // nombre del archivo vol y adj
         $name = $user.'_'.$year.'_'.$number.'.pdf';
-
-        $archivo = $this->request->getFile('archivo');
-        if ($archivo == null) {
-            return $this->failServerError('No cargo un archivo');
-        }
-
         $archivo_ext = $archivo->getClientExtension();
         $archivo_size = $archivo->getSize() / 1024;
 
@@ -62,24 +62,24 @@ class Volantes extends ResourceController
         }
 
         $adjunto = $this->request->getFile('adjunto');
-        if ($adjunto != null) {
+        if ($adjunto != NULL) {
             $ext = $adjunto->getClientExtension();
             $size = $adjunto->getSize() / 1024;
 
-            if (! $adjunto->isValid() || $ext != $this->allowed_types || $size > $this->max_size) {
-                return $this->failServerError('No es un adjunto valido debe ser pdf menor 2mb');
-            }    
+            if ($size > 0) {
+                if (!$adjunto->isValid() || $ext != $this->allowed_types || $size > $this->max_size) {
+                    return $this->failServerError('No es un adjunto valido debe ser pdf menor 2mb');
+                }    
+            }
         }
-
-        
 
         $fecha = $this->request->getPost('fecha');
         $destino = $this->request->getPost('destino');
         $asunto =  $this->request->getPost('asunto');
-        $archivo_path = $this->upload_path .'vol_'. $name;
-        $adjunto_path = ($ajunto != null)? $this->upload_path .'adj_'. $name : '';
+        $archivo_path = $this->upload_path . 'vol_'. $name;
+        $adjunto_path = ($ajunto != NULL)? $this->upload_path . 'adj_'. $name : '';
         $data = [
-            'estado' => $estado,
+            'estado' => 'emitido',
             'number' => $number,
             'year' => $year,
             'fecha' => $fecha, 
@@ -92,9 +92,9 @@ class Volantes extends ResourceController
 
         if ($this->model->insert($data)) {
             $data['id'] = $this->model->insertID();
-            if ($archivo->move(ROOTPATH.$this->upload_path, 'vol_'.$name)) {
-                if ($adjunto != null) {
-                    $adjunto->move(ROOTPATH.$this->upload_path, 'adj_'.$name);
+            if ($archivo->move(ROOTPATH, $archivo_path)) {
+                if ($adjunto_path != '') {
+                    $adjunto->move(ROOTPATH, $adjunto_path);
                 }
                 return $this->respondCreated($data);
             } else {
@@ -110,7 +110,7 @@ class Volantes extends ResourceController
      * @return json volante
      * @param $id del volante  
      */
-    public function edit($id = null)
+    public function edit($id = NULL)
     {
         //
     }
@@ -120,7 +120,7 @@ class Volantes extends ResourceController
      * @param int $id del volante
      * @var post estado, year, number, file adjunto  
      */
-    public function update($id = null)
+    public function update($id = NULL)
     {
         //
     }
@@ -131,15 +131,15 @@ class Volantes extends ResourceController
      * 
      * falta revisar
      */
-    public function delete($id = null)
+    public function delete($id = NULL)
     {
-        if($id == null){
+        if($id == NULL){
             return $this->failValidationErrors('No se ha pasado un ID valido');
         }
 
         $volante = $this->model->find($id);
         
-        if($volante == null){
+        if($volante == NULL){
             return $this->failNotFound('No se ha encontrado el usuario con el ID: '.$id);
         }
 
@@ -150,10 +150,12 @@ class Volantes extends ResourceController
 
         if($user == $volante['origen']){
             if($this->model->delete($id)){
-                $archivo = $order['enlace_archivo'];
+                $archivo = $volante['enlace_archivo'];
                 unlink(ROOTPATH . $archivo);
-                $adjunto = $order['enlace_adjunto'];
-                unlink(ROOTPATH . $adjunto);
+                $adjunto = $volante['enlace_adjunto'];
+                if($adjunto != ''){
+                    unlink(ROOTPATH . $adjunto);
+                }
                 return $this->respondDeleted($volante);
             } else {
                 return $this->failServerError('No se ha podido eliminar el registro');
