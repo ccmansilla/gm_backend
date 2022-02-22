@@ -20,18 +20,20 @@ class Orders extends ResourceController
         if($page > 0){
             $start = $page * $limit;
         }
-        try{  
-			if($this->jefaturaSession()){
+        //try{  
+			if($this->jefaturaSession() || $this->escuadronSession()){
 				if($type == NULL || ($type != 'od' && $type != 'og' && $type != 'or')){
 					return $this->failValidationErrors('No se ha pasado un tipo de orden valido');
 				}
-				return $this->respond($this->model->obtener($type, $start, $limit, $about));
+                $session = session();
+                $user = $session->get('user_id');
+				return $this->respond($this->model->obtener($type, $start, $limit, $about, $user));
 			} else {
 				return $this->failUnauthorized('Acceso no autorizado');
 			}
-        } catch (\Exception $e) {
+       /* } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }
+        }*/
     }
 
     public function create()
@@ -91,7 +93,7 @@ class Orders extends ResourceController
     public function edit($id = NULL)
     {
         try {
-            if($this->jefaturaSession()){
+            if($this->jefaturaSession() || $this->escuadronSession()){
                 if($id == NULL){
                     return $this->failValidationErrors('No se ha pasado un ID valido');
                 }
@@ -200,6 +202,10 @@ class Orders extends ResourceController
     private function jefaturaSession(){
         $session = session();
         return ($session->get('user_role')) == 'jefatura';
-        //return true;
+    }
+
+    private function escuadronSession(){
+        $session = session();
+        return ($session->get('user_role')) == 'dependencia';
     }
 }

@@ -12,15 +12,15 @@ class Users extends ResourceController
 
     public function index()
     {
-        //try{  
+        try{  
             if($this->adminSession()){
                 return $this->respond($this->model->findAll());
             } else {
                 return $this->failUnauthorized('Acceso no autorizado');
             }
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
     public function create()
@@ -120,7 +120,7 @@ class Users extends ResourceController
             return $this->failValidationErrors('No se ha pasado un nick o pass en formato json');
         }
 
-        //try{
+        try{
             $user = $this->model->check($nick, $pass);
             if($user){
                 $session = session();
@@ -132,9 +132,9 @@ class Users extends ResourceController
             } else {
                 return $this->failNotFound('No se ha encontrado el usuario');
             }
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
     public function logout(){
@@ -156,6 +156,5 @@ class Users extends ResourceController
     private function adminSession(){
         $session = session();
         return ($session->get('user_id')) != null;
-        //return true;
     }
 }

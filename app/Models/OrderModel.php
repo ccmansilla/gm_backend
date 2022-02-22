@@ -47,11 +47,11 @@ class OrderModel extends Model
     protected $beforeDelete         = [];
     protected $afterDelete          = [];
 
-    public function obtener($type, $start, $limit, $about) {
+    public function obtener($type, $start, $limit, $about, $user=NULL) {
         $builder = $this->builder();
         $builder->getTable('orders');
         $builder->select('*');
-        //$builder->join('views', 'orders.id = views.order_id', 'left');
+        $builder->join('views', "orders.id = views.order_id AND views.user_id = $user", 'left');
         $builder->where("type = '$type' and about like '%$about%'");
         $builder->orderBy('year DESC, number DESC');
         $orders = $builder->get($limit, $start)->getResult('array');
