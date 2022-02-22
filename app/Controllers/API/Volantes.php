@@ -17,13 +17,18 @@ class Volantes extends ResourceController
      * Retorna la lista de los volantes enviados por el usuario
      * @return json con la lista de volantes
      */
-    public function enviados()
+    public function enviados($page = 0, $about = '')
     {   
+        $limit = 10;
+        $start = 0;
+        if($page > 0){
+            $start = $page * $limit;
+        }
         try{
             $session = session();
             $user_id = $session->get('user_id');
             if($user_id != NULL){   
-                return $this->respond($this->model->enviados($user_id));
+                return $this->respond($this->model->enviados($user_id, $start, $limit, $about));
             } else {
                 return $this->failServerError('El usuario no esta logueado');
             }
@@ -37,11 +42,20 @@ class Volantes extends ResourceController
      * Retorna la lista de los volantes destinados al usuario 
      * @return json con la lista de volantes
      */
-    public function recibidos()
+    public function recibidos($page = 0, $about = '')
     {
+        $limit = 10;
+        $start = 0;
+        if($page > 0){
+            $start = $page * $limit;
+        }
         $session = session();
         $user_id = $session->get('user_id');
-        return $this->respond($this->model->recibidos($user_id));
+        if($user_id != NULL){   
+            return $this->respond($this->model->recibidos($user_id, $start, $limit, $about));
+        } else {
+            return $this->failServerError('El usuario no esta logueado');
+        }
     }
 
     

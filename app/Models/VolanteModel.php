@@ -48,27 +48,27 @@ class VolanteModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function enviados($user_id) {
+    public function enviados($user_id, $start, $limit, $about) {
         $builder = $this->builder();
         $builder->getTable('volantes');
         $builder->select('*');
         $builder->join('users', 'users.id = volantes.destino');
-        $builder->where("volantes.origen = $user_id");
+        $builder->where("volantes.origen = $user_id and  asunto like '%$about%'");
         $builder->orderBy('year DESC, number DESC');
-        //$volantes = $builder->get($limit, $start)->getResult('array');
-        $volantes = $builder->get()->getResult('array');
+        $volantes = $builder->get($limit, $start)->getResult('array');
+        //$volantes = $builder->get()->getResult('array');
         return $volantes;
     }
 
-    public function recibidos($user_id) {
+    public function recibidos($user_id, $start, $limit, $about) {
         $builder = $this->builder();
         $builder->getTable('volantes');
         $builder->select('*');
         $builder->join('users', 'users.id = volantes.origen');
-        $builder->where("destino = $user_id");
+        $builder->where("destino = $user_id and  asunto like '%$about%'");
         $builder->orderBy('year DESC, number DESC');
-        //$volantes = $builder->get($limit, $start)->getResult('array');
-        $volantes = $builder->get()->getResult('array');
+        $volantes = $builder->get($limit, $start)->getResult('array');
+        //$volantes = $builder->get()->getResult('array');
         return $volantes;
     }
 
