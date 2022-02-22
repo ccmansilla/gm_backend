@@ -13,6 +13,11 @@ class Orders extends ResourceController
     private $allowed_types = 'pdf'; //restrict extension
     private $max_size = 2048;
 
+    /**
+    * Devuelve el Listado de ordenes de acuerdo al tipo
+    * @return json con el listado de ordenes
+    * @param string $type $page $about
+    */
     public function index($type = NULL, $page = 0, $about = '')
     {
         $limit = 10;
@@ -20,8 +25,8 @@ class Orders extends ResourceController
         if($page > 0){
             $start = $page * $limit;
         }
-        //try{  
-			if($this->jefaturaSession() || $this->escuadronSession()){
+        try{  
+			if($this->jefaturaSession() || $this->dependenciaSession()){
 				if($type == NULL || ($type != 'od' && $type != 'og' && $type != 'or')){
 					return $this->failValidationErrors('No se ha pasado un tipo de orden valido');
 				}
@@ -31,11 +36,17 @@ class Orders extends ResourceController
 			} else {
 				return $this->failUnauthorized('Acceso no autorizado');
 			}
-       /* } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
+
+    /**
+    * Para crear una orden
+    * @return json con la orden creada
+    * @var post type, number, year, date, about, file
+    */
     public function create()
     {
         try {
@@ -89,11 +100,15 @@ class Orders extends ResourceController
         }
     }
 
-
+    /**
+    * Devuelve la orden para editar
+    * @return json con la orden
+    * @param int $id  de la orden
+    */
     public function edit($id = NULL)
     {
         try {
-            if($this->jefaturaSession() || $this->escuadronSession()){
+            if($this->jefaturaSession()){
                 if($id == NULL){
                     return $this->failValidationErrors('No se ha pasado un ID valido');
                 }
@@ -111,6 +126,11 @@ class Orders extends ResourceController
         }
     }
 
+    /**
+    * Actualiza los cambios de una orden editada
+    * @param int $id  de la orden
+    * @var post type, number, year, date, about, file
+    */
     public function update($id = NULL)
     {
         try {
@@ -172,7 +192,10 @@ class Orders extends ResourceController
         }
     }
 
-
+    /**
+    * Elimina una orden
+    * @param int $id  de la orden
+    */
     public function delete($id = NULL)
     {
         try{
@@ -199,12 +222,20 @@ class Orders extends ResourceController
         }
     }
 
+    /**
+    * Verifica que el usuario con session abierta tiene rol jefatura
+    * @return boolean true si es un usuario con rol jefatura
+    */
     private function jefaturaSession(){
         $session = session();
         return ($session->get('user_role')) == 'jefatura';
     }
 
-    private function escuadronSession(){
+    /**
+    * Verifica que el usuario con session abierta tiene rol jefatura
+    * @return boolean true si es un usuario con rol jefatura
+    */
+    private function dependenciaSession(){
         $session = session();
         return ($session->get('user_role')) == 'dependencia';
     }

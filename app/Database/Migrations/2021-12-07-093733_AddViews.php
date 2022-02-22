@@ -9,7 +9,7 @@ class AddViews extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
+            'view_id' => [
                 'type' => 'INT',
                 'constraint' => '11',
                 'unsigned' => true,
@@ -27,7 +27,7 @@ class AddViews extends Migration
             ]
         ]);
 
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('view_id', true);
         $this->forge->addKey(['order_id', 'user_id'], false, true); //unique key
         $this->forge->createTable('views');
     }

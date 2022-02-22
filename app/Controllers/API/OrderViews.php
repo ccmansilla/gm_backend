@@ -10,9 +10,9 @@ class OrderViews extends ResourceController
     protected $format    = 'json';
     
     /**
-     * Return an array of resource objects, themselves in array format
-     *
-     * @return mixed
+     * Devuelve la lista de usuarios que tienen visto de la orden
+     * @return json con la lista de usuarios
+     * @param $order_id de la orden  
      */
     public function index($order_id = NULL)
     {
@@ -20,56 +20,16 @@ class OrderViews extends ResourceController
             if($order_id == NULL){
                 return $this->failValidationErrors('No se ha pasado un ID valido');
             }
-            $views = $this->model->where('order_id',$order_id)->get()->getResult('array');
-            return $this->respond($views);
-        } catch (\Exception $e) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
-        }
-    }
-
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
-    public function show($order_id = NULL, $user_id = NULL)
-    {
-        try {
-            if($order_id == NULL || $user_id == NULL){
-                return $this->failValidationErrors('No se ha pasado un ID valido');
-            }
-            $view = $this->model->where(['order_id' => $order_id, 'user_id' => $user_id])->first();
-            if($view == NULL){
-                return $this->failNotFound('No se ha encontrado');
-            }
-            return $this->respond($view);
-        } catch (\Exception $e) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
-        }
-    }
-    
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
-    public function users($order_id = NULL)
-    {
-        //try {
-            if($order_id == NULL){
-                return $this->failValidationErrors('No se ha pasado un ID valido');
-            }
             $users = $this->model->users($order_id);
             return $this->respond($users);
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor');
-        }*/
+        }
     }
 
     /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
+     * Crea un visto de una orden
+     * @var json {'order_id', 'user_id'}
      */
     public function create()
     {
@@ -84,5 +44,28 @@ class OrderViews extends ResourceController
             return $this->failServerError('Ha ocurrido un error en el servidor');
         }
     }
-    
+
+    /**
+     * Elimina un visto de una orden
+     * @param $id del visto
+     */
+    public function delete($id = NULL)
+    {
+        try {
+            if($id == NULL){
+                return $this->failValidationErrors('No se ha pasado un ID valido');
+            }
+            $view = $this->model->find($id);
+            if($view == NULL){
+                return $this->failNotFound('No se ha encontrado el usuario con el ID: '.$id);
+            }
+            if($this->model->delete($id)){
+                return $this->respondDeleted($view);
+            } else {
+                return $this->failServerError('No se ha podido eliminar el registro');
+            }
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+        }
+    }
 }

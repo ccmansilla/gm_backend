@@ -33,48 +33,48 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
-//http://localhost:8080/api/
+//https://host/api/
 $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes) {
-    // ruta : http://localhost:8080/api/users 
+    // ruta : https://host/api/users 
     // con session abierta rol admin retorna todos los usuarios
     $routes->get('users', 'Users::index');
 
-    // ruta : http://localhost:8080/api/users/create 
+    // ruta : https://host/api/users/create 
     // espera un json con los datos role, name, nick, pass
     // con session abierta rol admin retorna el usuario creado
     $routes->post('users/create/index/(:type)', 'Users::create/index');
 
-    // ruta : http://localhost:8080/api/users/edit/[id]
+    // ruta : https://host/api/users/edit/[id]
     // espera un id en la ruta 
     // con session abierta rol admin retorna el usuario del id pasado
     $routes->get('users/edit/(:num)', 'Users::edit/$1');
 
-    // ruta : http://localhost:8080/api/users/update/[id]
+    // ruta : https://host/api/users/update/[id]
     // espera un id en la ruta y un json con los datos [role = {'admin', 'dependencia', 'jefatura'}, 
     //                                                   name, nick, pass]
     // con session abierta rol admin retorna el usuario actualizado
     $routes->put('users/update/(:num)','Users::update/$1');
 
-    // ruta : http://localhost:8080/api/users/delete/[id]
+    // ruta : https://host/api/users/delete/[id]
     // espera un id en la ruta
     // con session abierta rol admin retorna el usuario eliminado
     $routes->delete('users/delete/(:num)','Users::delete/$1');
 
-    // ruta : http://localhost:8080/api/users/login
+    // ruta : https://host/api/users/login
     // espera json con los datos nick y pass
     // retorna el id, rol, name  y abre session
     $routes->post('users/login','Users::login');
 
-    // ruta : http://localhost:8080/api/users/logout
+    // ruta : https://host/api/users/logout
     // cierra la session
     $routes->get('users/logout','Users::logout');
 
-    // ruta : http://localhost:8080/api/orders/[type]
+    // ruta : https://host/api/orders/[type]
     // con session abierta rol dependencia o jefatura retorna lista de ordenes
     // de acuerdo al type = { 'od' , 'og', 'or'}  de la ordern pasado en la ruta
     $routes->get('orders/index/(:any)', 'Orders::index/$1/$2/$3');
 
-    // ruta : http://localhost:8080/api/orders/create
+    // ruta : https://host/api/orders/create
     // espera un form-data con los datos:
     //  type = { 'od' , 'og', 'or'}  ordern dia , orden guarnicion, orden reservada
     //  number que es numero de orden
@@ -85,12 +85,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes) 
     // con session abierta rol jefatura retorna la orden creada
     $routes->post('orders/create', 'Orders::create');
 
-    // ruta : http://localhost:8080/api/orders/edit/[id]
+    // ruta : https://host/api/orders/edit/[id]
     // espera un id en la ruta
     // con session abierta rol jefatura retorna la orden para editar
     $routes->get('orders/edit/(:num)','Orders::edit/$1');
 
-    // ruta : http://localhost:8080/api/orders/create
+    // ruta : https://host/api/orders/create
     // espera un id en la ruta y un form-data con los datos:
     //  type = { 'od' , 'og', 'or'}  ordern dia , orden guarnicion, orden reservada
     //  number que es numero de orden
@@ -101,23 +101,39 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes) 
     // con session abierta rol jefatura
     $routes->put('orders/update/(:num)', 'Orders::update/$1');
 
-    // ruta : http://localhost:8080/api/orders/delete/[id]
+    // ruta : https://host/api/orders/delete/[id]
     // espera un id en la ruta
     // con session abierta rol jefatura retorna la orden eliminada
     $routes->delete('orders/delete/(:num)','Orders::delete/$1');
 
-    //ruta : http://localhost:8080/api/orderviews/index/[order_id]
+    //ruta : https://host/api/orderviews/index/[order_id]
     $routes->get('orderviews/index/(:num)', 'OrderViews::index/$1');
 
-    //ruta : http://localhost:8080/api/orderviews/show/[order_id]/[user_id]
-    $routes->get('ordrviews/show/(:num)/(:num)','OrderViews::show/$1/$2');
-
-     //ruta : http://localhost:8080/api/orderviews/users/[order_id]
-     $routes->get('orderviews/users/(:num)','OrderViews::users/$1');
-
-    //ruta : http://localhost:8080/api/orderviews/create
+    //ruta : https://host/api/orderviews/create
     //datos body json { order_id , user_id }
     $routes->post('orderviews/create', 'OrderViews::create');
+
+    //ruta : https://host/api/orderviews/delete/[id]
+    $routes->delete('orderviews/delete/(:num)', 'OrderViews::delete/$1');
+
+    //ruta : https://host/api/volantes/enviados
+    $routes->get('volantes/enviados', 'Volantes::enviados');    
+
+    //ruta : https://host/api/volantes/recibidos
+    $routes->get('volantes/recibidos', 'Volantes::recibidos');
+
+    //ruta : https://host/api/volantes/create
+    // espera un form-data con los datos:
+    //  number que es numero de volante
+    //  year año del volante
+    //  fecha actual
+    //  destino que es el id de la dependencia que recibe el volante 
+    //  asunto descripcion sobre el volante
+    //  archivo pdf max 2mb
+    //  adjunto max 2mb
+    // con session abierta 
+    $routes->post('volantes/create', 'Volantes::create');
+    
 });
 
 /*
