@@ -6,7 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 
 class OrderViews extends ResourceController
 {
-    protected $modelName = 'App\Models\ViewModel';
+    protected $modelName = 'App\Models\OrderViewModel';
     protected $format    = 'json';
     
     /**

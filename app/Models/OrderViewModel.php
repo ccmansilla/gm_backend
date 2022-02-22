@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ViewModel extends Model
+class OrderViewModel extends Model
 {
     protected $DBGroup              = 'default';
     protected $table                = 'orderviews';
