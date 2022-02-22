@@ -77,9 +77,12 @@ class VolanteModel extends Model
         $builder->getTable('volantes');
         $builder->select('max(number)');
         $builder->where("origen = $user_id");
-        $builder->orderBy('year DESC, number DESC');
-        $volantes = $builder->get()->getResult('array');
-        return $volantes;
+        $volante = $builder->get()->getResult('array');
+        $number = 1;
+        if(count($volante) > 0){
+            $number = $volante[0]['max(number)'] + 1;
+        }
+        return $number;
     }
     
 }
