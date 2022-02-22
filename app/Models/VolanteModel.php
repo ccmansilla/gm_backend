@@ -53,9 +53,10 @@ class VolanteModel extends Model
         $builder->getTable('volantes');
         $builder->select('*');
         $builder->join('users', 'users.id = volantes.destino');
-        $builder->where("origen = uders_id");
+        $builder->where("volantes.origen = $user_id");
         $builder->orderBy('year DESC, number DESC');
-        $volantes = $builder->get($limit, $start)->getResult('array');
+        //$volantes = $builder->get($limit, $start)->getResult('array');
+        $volantes = $builder->get()->getResult('array');
         return $volantes;
     }
 
@@ -64,9 +65,20 @@ class VolanteModel extends Model
         $builder->getTable('volantes');
         $builder->select('*');
         $builder->join('users', 'users.id = volantes.origen');
-        $builder->where("destino = uders_id");
+        $builder->where("destino = $user_id");
         $builder->orderBy('year DESC, number DESC');
-        $volantes = $builder->get($limit, $start)->getResult('array');
+        //$volantes = $builder->get($limit, $start)->getResult('array');
+        $volantes = $builder->get()->getResult('array');
+        return $volantes;
+    }
+
+    public function next_number($user_id, $year){
+        $builder = $this->builder();
+        $builder->getTable('volantes');
+        $builder->select('max(number)');
+        $builder->where("origen = $user_id");
+        $builder->orderBy('year DESC, number DESC');
+        $volantes = $builder->get()->getResult('array');
         return $volantes;
     }
     

@@ -18,8 +18,19 @@ class Volantes extends ResourceController
      * @return json con la lista de volantes
      */
     public function enviados()
-    {
-        return $this->respond($this->model->findAll());
+    {   
+        try{
+            $session = session();
+            $user_id = $session->get('user_id');
+            if($user_id != NULL){   
+                return $this->respond($this->model->enviados($user_id));
+            } else {
+                return $this->failServerError('El usuario no esta logueado');
+            }
+        }
+        catch(\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor '.$e);
+        }
     }
 
     /**
@@ -28,7 +39,9 @@ class Volantes extends ResourceController
      */
     public function recibidos()
     {
-        return $this->respond($this->model->findAll());
+        $session = session();
+        $user_id = $session->get('user_id');
+        return $this->respond($this->model->recibidos($user_id));
     }
 
     
@@ -162,7 +175,13 @@ class Volantes extends ResourceController
             }
         } else {
             return $this->failValidationErrors('El volante no le pertenece al usuario');
-        }
-         
+        }    
+    }
+
+    public function next_number($year){
+        $session = session();
+        $user_id = $session->get('user_id');
+        $number = $this->model->next_number($user_id, $year);
+        return $this->respond($number);
     }
 }
