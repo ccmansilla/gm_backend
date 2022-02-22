@@ -45,10 +45,10 @@ class OrderViewModel extends Model
 
     public function users($id) {
         $builder = $this->builder();
-        $builder->getTable('views');
-        $builder->select('*');
-        $builder->join('users', 'views.user_id = users.id', 'left');
-        $builder->where("views.order_id = $id");
+        $builder->getTable('orderviews');
+        $builder->select('name');
+        $builder->join('users', 'orderviews.user_id = users.id', 'left');
+        $builder->where("orderviews.order_id = $id");
         $builder->orderBy('name ASC');
         $users = $builder->get()->getResult('array');
         return $users;
