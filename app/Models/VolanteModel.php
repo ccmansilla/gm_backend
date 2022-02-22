@@ -76,7 +76,7 @@ class VolanteModel extends Model
         $builder = $this->builder();
         $builder->getTable('volantes');
         $builder->select('max(number)');
-        $builder->where("origen = $user_id");
+        $builder->where("origen = $user_id and year = $year");
         $volante = $builder->get()->getResult('array');
         $number = 1;
         if(count($volante) > 0){
