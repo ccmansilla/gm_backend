@@ -29,11 +29,11 @@ class AddViews extends Migration
 
         $this->forge->addKey('view_id', true);
         $this->forge->addKey(['order_id', 'user_id'], false, true); //unique key
-        $this->forge->createTable('views');
+        $this->forge->createTable('orderviews');
     }
 
     public function down()
     {
-        $this->forge->dropTable('views');
+        $this->forge->dropTable('orderviews');
     }
 }

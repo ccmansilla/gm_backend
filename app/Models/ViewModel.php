@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class ViewModel extends Model
 {
     protected $DBGroup              = 'default';
-    protected $table                = 'views';
+    protected $table                = 'orderviews';
     protected $primaryKey           = 'view_id';
     protected $useAutoIncrement     = true;
     protected $insertID             = 0;
