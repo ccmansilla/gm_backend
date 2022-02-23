@@ -114,7 +114,7 @@ class Orders extends ResourceController
                 }
                 $order = $this->model->find($id);
                 if($order == NULL){
-                    return $this->failNotFound('No se ha encontrado el usuario con el ID: '.$id);
+                    return $this->failNotFound('No se ha encontrado la orden con el ID: '.$id);
                 } else {
                     return $this->respond($order);
                 }
@@ -146,21 +146,22 @@ class Orders extends ResourceController
                     $year = $this->request->getPost('year'); 
                     $number = $this->request->getPost('number');
                     $name = $type.'_'.$year.'_'.$number.'.pdf';
-
+                    
                     $file = $this->request->getFile('file');
-                    if ($file == NULL) {
-                        return $this->failServerError('No cargo un archivo');
-                    }
-                    $ext = $file->getClientExtension();
-                    $size = $file->getSize() / 1024;
+                    $old_file = $order['file_url'];
+                    $path = $old_file;
 
-                    if (!$file->isValid() || $ext != $this->allowed_types || $size > $this->max_size) {
-                        return $this->failServerError('No es un archivo valido debe ser un pdf de tamaño menor a 2mb');
+                    if ($file != NULL) {
+                        $ext = $file->getClientExtension();
+                        $size = $file->getSize() / 1024;
+                        if ($file->isValid() && $ext == $this->allowed_types && $size < $this->max_size) {
+                            $path = $this->upload_path . $name;
+                        }
                     }
-                
+                    
                     $date = $this->request->getPost('date');
                     $about =  $this->request->getPost('about');
-                    $path = $this->upload_path . $name;
+                    
                     $data = [
                         'type' => $type,
                         'number' => $number,
@@ -171,24 +172,27 @@ class Orders extends ResourceController
                     ];
 
                     if($this->model->update($id, $data)){
-                        unlink(ROOTPATH . $order['file_url']);
-                        if ($file->move(ROOTPATH.$this->upload_path, $name)){
-                            return $this->respondCreated($data);
-                       } else {
-                            return $this->failServerError('No se pudo cargar el archivo ');
+                        if($file->getSize() > 0){
+                            unlink(ROOTPATH . $old_file);
+                            if ($file->move(ROOTPATH.$this->upload_path, $name)){
+                                $data['id'] = $order['id'];
+                                return $this->respond($data);
+                            } else {
+                                return $this->failServerError('No se pudo cargar el archivo ');
+                            }
+                        } else {
+                            $data['id'] = $order['id'];
+                            return $this->respond($data);
                         }
                     } else {
                         return $this->failValidationErrors($this->model->validation->listErrors());
                     }
-
-                    return $this->respond([]);
                 }
-                
             } else {
                 return $this->failUnauthorized('Acceso no autorizado');
             }   
         } catch (\Exception $e) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
+            return $this->failServerError('Ha ocurrido un error en el servidor '.$e);
         }
     }
 

@@ -139,7 +139,19 @@ class Volantes extends ResourceController
      */
     public function edit($id = NULL)
     {
-        //
+        try {
+            if($id == NULL){
+                return $this->failValidationErrors('No se ha pasado un ID valido');
+            }
+            $volante = $this->model->find($id);
+            if($volante == NULL){
+                return $this->failNotFound('No se ha encontrado el volante ID: '.$id);
+            } else {
+                return $this->respond($volante);
+            }
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+        }
     }
 
     /**
@@ -149,7 +161,67 @@ class Volantes extends ResourceController
      */
     public function update($id = NULL)
     {
-        //
+        try {
+            if($id == NULL){
+                return $this->failValidationErrors('No se ha pasado un ID valido');
+            }
+            $volante = $this->model->find($id);
+            if($volante == NULL){
+                return $this->failNotFound('No se ha encontrado el volante con el ID: '.$id);
+            } else {
+                $year = $this->request->getPost('year'); 
+                $number = $this->request->getPost('number');
+                $session = session();
+                $user = $session->get('user_id');
+                $name = $user.'_'.$year.'_'.$number.'.pdf';
+                /*
+                $archivo = $this->request->getFile('archivo');
+                if ($archivo == NULL) {
+                    return $this->failServerError('No cargo un archivo');
+                }
+                $ext = $file->getClientExtension();
+                $size = $file->getSize() / 1024;
+
+                if (!$file->isValid() || $ext != $this->allowed_types || $size > $this->max_size) {
+                    return $this->failServerError('No es un archivo valido debe ser un pdf de tamaño menor a 2mb');
+                }
+                */
+                $date = $this->request->getPost('date');
+                $about =  $this->request->getPost('about');
+                $origen = $user;
+                $destino = $this->request->getPost('destino');
+                $path = $volante['enlace_archivo'];
+                $data = [
+                    'number' => $number,
+                    'year' => $year,
+                    'fecha' => $date, 
+                    'origen' => $origen,
+                    'destino' => $destino,
+                    'asunto' => $about,
+                    'enlace_archivo' => $path
+                ];
+
+                $this->model->update($id, $data);
+                
+                /*
+                if($this->model->update($id, $data)){
+                    unlink(ROOTPATH . $order['file_url']);
+                    if ($file->move(ROOTPATH.$this->upload_path, $name)){
+                        return $this->respond($data);
+                    } else {
+                        return $this->failServerError('No se pudo cargar el archivo ');
+                    }
+                } else {
+                    return $this->failValidationErrors($this->model->validation->listErrors());
+                }
+                return $this->respond([]);
+                */
+                return $this->respond($data);
+            }
+                
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+        }
     }
 
     /**
