@@ -186,18 +186,18 @@ class Volantes extends ResourceController
                     return $this->failServerError('No es un archivo valido debe ser un pdf de tamaño menor a 2mb');
                 }
                 */
-                $date = $this->request->getPost('date');
-                $about =  $this->request->getPost('about');
+                $fecha = $this->request->getPost('fecha');
+                $asunto =  $this->request->getPost('asunto');
                 $origen = $user;
                 $destino = $this->request->getPost('destino');
                 $path = $volante['enlace_archivo'];
                 $data = [
                     'number' => $number,
                     'year' => $year,
-                    'fecha' => $date, 
+                    'fecha' => $fecha, 
                     'origen' => $origen,
                     'destino' => $destino,
-                    'asunto' => $about,
+                    'asunto' => $asunto,
                     'enlace_archivo' => $path
                 ];
 
